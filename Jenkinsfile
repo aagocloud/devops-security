@@ -31,7 +31,14 @@ pipeline {
       }
       stage("SonarQube - SAST"){
         steps{
-          sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_3ecd8a1ca3b075e4ffdca3d326ed22fcf6bf1f51"
+          withSonarQubeEnv('SonarQube'){
+             sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_3ecd8a1ca3b075e4ffdca3d326ed22fcf6bf1f51"
+          }
+          timeout(time: 2, unit: 'MINUTES'){
+            script{
+              waitForQualityGate abortPipeline: true
+            }
+          }
         }
       }
       stage('Build and Push to DockerHub') {
