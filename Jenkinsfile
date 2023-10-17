@@ -53,7 +53,6 @@ pipeline {
             }
           }
         }
-      }
       stage('Build and Push to DockerHub') {
             steps {
               withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
