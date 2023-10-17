@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dockerBaseImage = $(awk 'NR==1 {print $2}' Dockerfile)
+dockerBaseImage=$(awk 'NR==1 {print $2}' Dockerfile)
 echo $dockerBaseImage
 
 docker run -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.45.1 -q image --exit-code 0 --severity HIGH --light $dockerBaseImage
