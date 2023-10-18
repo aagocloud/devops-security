@@ -32,9 +32,16 @@ pipeline {
           }
         }
       }
-      stage("Vulnetability Scan - Trivy"){
+      stage("Vulnetability Scan - Docker"){
         steps{
+          parallel(
+            "Trivy Scan":{
              sh "./trivy-docker-image-scan.sh"
+            },
+            "OPA conftest":{
+              sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy docker.rego Dockerfile'
+            }
+          )
           }
       }
       /*
