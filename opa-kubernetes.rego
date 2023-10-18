@@ -2,7 +2,7 @@ package main
 
 deny[msg] {
   input.kind = "Service"
-  input.spec.type = "NodePort"
+  not input.spec.type = "NodePort"
   msg = "NodePort Service is not Allowed"
 }
 
