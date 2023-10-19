@@ -84,7 +84,7 @@ pipeline {
       stage('Deploy to Kubernetes Cluster') {
             steps {
               withKubeConfig([credentialsId: 'kubeconfig']){
-                sh "./k8s-deployment.sh'
+                sh "./k8s-deployment.sh"
               }
             }
       }
@@ -92,11 +92,10 @@ pipeline {
       stage('Verify Deployment to Kubernetes Cluster') {
             steps {
               withKubeConfig([credentialsId: 'kubeconfig']){
-                sh "./k8s-deployment-rollout-stsus.sh'
+                sh "./k8s-deployment-rollout-status.sh"
               }
             }
       }
-
 
 
   }
