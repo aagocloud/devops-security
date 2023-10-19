@@ -74,10 +74,16 @@ pipeline {
               }
             }
       }
-
-      stage("Conf Test - Kubernetes"){
+      stage("Vulnetability Scan - Kubernetes"){
         steps{
+          parallel(
+            "OPA Scan":{
              sh "./opa-kube-conftest.sh"
+            },
+            "KubeSec Scan":{
+              sh './kubesec-scan.sh'
+            }
+          )
           }
       }
 
