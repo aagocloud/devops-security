@@ -1,6 +1,15 @@
 pipeline {
   agent any
 
+  environment {
+    deploymentName = "devsecops"
+    containerName  = "devsecops-container"
+    serviceName    = "devsecops-svc"
+    imageName      = "pubudusenadeera/numeric-app:${GIT_COMMIT}"
+    applicationURL = "http://localhost:32098"
+    applicationURI = "/increment/99"
+  }
+
   stages {
       stage('Build Artifact') {
             steps {
@@ -75,11 +84,21 @@ pipeline {
       stage('Deploy to Kubernetes Cluster') {
             steps {
               withKubeConfig([credentialsId: 'kubeconfig']){
-                sh "sed -i 's#replace#pubudusenadeera/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-                sh 'kubectl apply -f k8s_deployment_service.yaml'
+                sh "./k8s-deployment.sh'
               }
             }
-      }     
+      }
+
+      stage('Verify Deployment to Kubernetes Cluster') {
+            steps {
+              withKubeConfig([credentialsId: 'kubeconfig']){
+                sh "./k8s-deployment-rollout-stsus.sh'
+              }
+            }
+      }
+
+
+
   }
   post { 
         always { 
